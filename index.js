@@ -109,6 +109,19 @@ const parsers = {
     });
 
     return events;
+  },
+  hudson: (body, v) => {
+    let $ = cheerio.load(body);
+    let events = [];
+
+    $('td.tribe-events-has-events .hentry').each((i,e) => {
+      const tribeJSON = $(e).data('tribejson');
+      const date = tribeJSON.startTime;
+      const artist = tribeJSON.title;
+      events.push({ date, artist });
+    });
+
+    return events;
   }
 };
 
@@ -142,19 +155,19 @@ const config = [
   { parser: 'hvmusic', venue: '12 Grapes', url: 'http://hvmusic.com/listing/calentry_list_user.php?calendar_id=208' },
   { parser: 'hvmusic', venue: 'Beanrunner', url: 'http://hvmusic.com/listing/calentry_list_user.php?calendar_id=256' },
   { parser: 'tpch', venue: 'Peekskill Coffee House', url: 'http://peekskillcoffee.com/events' },
-  // { parser: 'hudson', venue: 'Hudson Room', url: '' },
+  { parser: 'hudson', venue: 'Hudson Room', url: 'https://www.hudsonroom.com/calendar/' },
   // { parser: 'dylans', venue: 'Dylans Wine Cellar Events', url: '' },
-  // { parser: 'gleasons', venue: 'Gleasons', url: '' },
 ];
 
 config.forEach((v) => scrape(v));
-// scrape(config[4]);
+// scrape(config[5]);
 
   // FACEBOOK
 // Division Street Guitars, and their Facebook page
 // Embark Peekskill, and their Facebook page
 
   // LESS ACTIVE VENUES
+// { parser: 'gleasons', venue: 'Gleasons', url: '' },
 // Division Street Grill Events
 // Iron Vine
 // Kyle’s Pub
