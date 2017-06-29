@@ -82,6 +82,46 @@ const parsers = {
     });
 
     return events;
+  },
+  tpch: (body, v) => {
+    let $ = cheerio.load(body);
+    let events = [];
+
+    $('#blog li').first().find('p').each((i,e) => {
+      let date;
+      let artist;
+      const listing = $(e).text();
+      const listingArr = listing.split('~');
+
+      if (listingArr.length > 1) {
+        date = listingArr[0].trim();
+        date += ' 7pm (Sunday 1pm)';
+        artist = listingArr[1].trim();
+        events.push({ date, artist });
+      }
+      else if (listingArr.length === 1) {
+        const tmpVar = listingArr[0].trim();
+        if (tmpVar != '') {
+          date = artist = tmpVar;
+          events.push({ date, artist });
+        }
+      }
+    });
+
+    return events;
+  },
+  hudson: (body, v) => {
+    let $ = cheerio.load(body);
+    let events = [];
+
+    $('td.tribe-events-has-events .hentry').each((i,e) => {
+      const tribeJSON = $(e).data('tribejson');
+      const date = tribeJSON.startTime;
+      const artist = tribeJSON.title;
+      events.push({ date, artist });
+    });
+
+    return events;
   }
 };
 
@@ -114,19 +154,25 @@ const config = [
   { parser: 'birdsall',  venue: 'Birdsall House', url: 'http://birdsallhouse.net/music/' },
   { parser: 'hvmusic', venue: '12 Grapes', url: 'http://hvmusic.com/listing/calentry_list_user.php?calendar_id=208' },
   { parser: 'hvmusic', venue: 'Beanrunner', url: 'http://hvmusic.com/listing/calentry_list_user.php?calendar_id=256' },
+  { parser: 'tpch', venue: 'Peekskill Coffee House', url: 'http://peekskillcoffee.com/events' },
+  { parser: 'hudson', venue: 'Hudson Room', url: 'https://www.hudsonroom.com/calendar/' },
+  // { parser: 'dylans', venue: 'Dylans Wine Cellar Events', url: '' },
+];
+
+config.forEach((v) => scrape(v));
+// scrape(config[5]);
+
+  // FACEBOOK
+// Division Street Guitars, and their Facebook page
+// Embark Peekskill, and their Facebook page
+
+  // LESS ACTIVE VENUES
+// { parser: 'gleasons', venue: 'Gleasons', url: '' },
 // Division Street Grill Events
-// Dylan’s Wine Cellar Events
-// Gleasons Events
-// Hudson Room
 // Iron Vine
 // Kyle’s Pub
 // McDonald & Peacock Cider House
 // Peekskill Brewery
-// The Peekskill Coffee House
-  //
-// Division Street Guitars, and their Facebook page
-// Embark Peekskill, and their Facebook page
-  //
 // The Quiet Man Public House
 // Ruben’s Mexican Café
 // Taco Dive Bar
@@ -135,7 +181,3 @@ const config = [
 // Peekskill Farmers’ Market
 // The Field Library
 // Peekskill BID Events
-];
-
-// scrape(config[2]);
-config.forEach((v) => scrape(v));
