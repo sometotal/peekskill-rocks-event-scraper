@@ -68,15 +68,15 @@ const parsers = {
     let events = [];
     let count = 0;
 
-    $('.hvmusic_row1').each((i,e) => {
-      // get the even rows within the first 8 rows
-      if ((i < 8) && (i % 2 == 0)) {
-        const td = $(e).find('td[rowspan=2]');
+    $('.hvmusic_calendar tr').each((i,e) => {
+      const $e = $(e);
+      if ($e.hasClass('hvmusic_row1') || $e.hasClass('hvmusic_row2')) {
+        const td = $e.find('td[rowspan=2]');
         const weekday = $(td).find('small').eq(0).text();
         const caldate = $(td).find('nobr').text();
         const [timestart, timeend] = $(td).find('small').eq(1).text().split('to');
         const date = `${weekday} ${caldate} ${timestart} to ${timeend}`
-        const artist = $(e).find('.hvmusic_band_name').text();
+        const artist = $e.find('.hvmusic_band_name').text();
         events.push({date, artist});
       }
     });
@@ -127,7 +127,7 @@ const parsers = {
 
 const scrape = function(v) {
   const options = {
-    url : v.url,
+    url: v.feed || v.url,
     headers: {
      'User-Agent': 'request'
     }
@@ -137,7 +137,6 @@ const scrape = function(v) {
     if (err) { return err; }
     resCount ++;
 
-    console.log(v.venue);
     const events = parsers[v.parser](body, v);
     fullTmpl += template(events, v);
 
@@ -150,18 +149,50 @@ const scrape = function(v) {
 }
 
 const config = [
-  { parser: 'paramount', venue: 'Paramount Hudson Valley', url: 'http://paramounthudsonvalley.com/events/' },
-  { parser: 'birdsall',  venue: 'Birdsall House', url: 'http://birdsallhouse.net/music/' },
-  { parser: 'hvmusic', venue: '12 Grapes', url: 'http://hvmusic.com/listing/calentry_list_user.php?calendar_id=208' },
-  { parser: 'hvmusic', venue: 'Beanrunner', url: 'http://hvmusic.com/listing/calentry_list_user.php?calendar_id=256' },
-  { parser: 'tpch', venue: 'Peekskill Coffee House', url: 'http://peekskillcoffee.com/events' },
-  { parser: 'hudson', venue: 'Hudson Room', url: 'https://www.hudsonroom.com/calendar/' },
+  {
+    parser: 'paramount',
+    venue: 'Paramount Hudson Valley',
+    url: 'http://paramounthudsonvalley.com/events/'
+  },
+  {
+    parser: 'birdsall',
+    venue: 'Birdsall House',
+    url: 'http://birdsallhouse.net/music/'
+  },
+  {
+    parser: 'hvmusic',
+    venue: '12 Grapes',
+    feed: 'http://hvmusic.com/listing/calentry_list_user.php?calendar_id=208',
+    url: 'http://www.12grapes.com/events.html'
+  },
+  {
+    parser: 'hvmusic',
+    venue: 'Beanrunner',
+    feed: 'http://hvmusic.com/listing/calentry_list_user.php?calendar_id=256',
+    url: 'http://beanrunnercafe.com/beanrunnermusic.html'
+  },
+  {
+    parser: 'tpch',
+    venue: 'Peekskill Coffee House',
+    url: 'http://peekskillcoffee.com/events'
+  },
+  {
+    parser: 'hudson',
+    venue: 'Hudson Room',
+    url: 'https://www.hudsonroom.com/calendar/'
+  },
   // { parser: 'dylans', venue: 'Dylans Wine Cellar Events', url: '' },
 ];
 
 config.forEach((v) => scrape(v));
-// scrape(config[5]);
+// test single scrape
+// scrape(config[3]);
 
+
+// ************************************
+// TODO Implement the following sources
+// ************************************
+//
   // FACEBOOK
 // Division Street Guitars, and their Facebook page
 // Embark Peekskill, and their Facebook page
@@ -181,3 +212,39 @@ config.forEach((v) => scrape(v));
 // Peekskill Farmers’ Market
 // The Field Library
 // Peekskill BID Events
+
+
+// ***********************
+// NOTES
+// ***********************
+//
+// cron job every wednesday morning
+//
+// ~ scraper.js (dep: src-parser.js)
+// capture all events happening thursday - wednesday
+// push this week's events to cloudant
+// return: events object keyed by day names
+//
+// ~ templater.js (dep: day-templater.js)
+// template object split by days
+// push templated output to a cloudant
+// return: template object
+//
+// ~ template-syndicator.js
+// post templated output to slack
+// make templated output viewable in a webpage via url param
+// url param is used in dynamic request and render template in simple webpage
+//
+// UTIL
+// ~ src-parser.js
+// parser util
+// method for each venue
+//
+// ~ date-parser.js
+// parses various dates
+//
+// ~ day-templater.js
+// templates out the days of the week with "happy [...]" options
+//
+// ~ env.js (??)
+// handle prod v dev credentials
