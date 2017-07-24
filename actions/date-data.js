@@ -2,8 +2,10 @@ const moment = require('moment');
 const today = new Date();
 const dayNum = today.getDate();
 const weekStart = dayNum + 3;
+const weekStartMoment = moment().startOf('week');
 const weekEnd = weekStart + 6;
-const monthNum = today.getMonth();
+const weekEndMoment = moment().endOf('week');
+const monthNum = today.getMonth(); // this is dangerous, could lead to displaying previous month
 const days = [ "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday" ];
 const months = [
   'January',
@@ -26,7 +28,7 @@ const getTime = (dateObj) => {
 };
 
 const isThisWeek = (date) => {
-  return moment(date).isBetween(moment().startOf('week'), moment().endOf('week'));
+  return moment(date).isBetween(weekStartMoment, weekEndMoment, null, '[]');
 };
 
 console.log('WE NEED TO WORK OUT HOW TO DO THE NEXTMONTH ISSUE WHEN WE ARE BRIDGING MONTHS');
@@ -35,7 +37,9 @@ module.exports = {
   today,
   dayNum,
   weekStart,
+  weekStartMoment,
   weekEnd,
+  weekEndMoment,
   month,
   monthNum,
   days,
