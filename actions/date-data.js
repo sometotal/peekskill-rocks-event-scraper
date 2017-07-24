@@ -25,9 +25,9 @@ const getTime = (dateObj) => {
   return moment(dateObj).format('h:mm A');
 };
 
-const isThisWeek = (eventDayNum) => {
-  return (eventDayNum >= weekStart && eventDayNum <= weekEnd);
-}
+const isThisWeek = (date) => {
+  return moment(date).isBetween(moment().startOf('week'), moment().endOf('week'));
+};
 
 console.log('WE NEED TO WORK OUT HOW TO DO THE NEXTMONTH ISSUE WHEN WE ARE BRIDGING MONTHS');
 
@@ -41,5 +41,5 @@ module.exports = {
   days,
   months,
   getTime,
-  isThisWeek,
+  isThisWeek
 };

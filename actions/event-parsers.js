@@ -25,11 +25,10 @@ module.exports = {
       let date = $e.find('strong').text();
       date = new Date(date);
 
-      const dayNum = date.getDate();
       const dayName = dateData.days[date.getDay()];
       const eventTime = dateData.getTime(date);
 
-      if (dateData.isThisWeek(dayNum)) {
+      if (dateData.isThisWeek(date)) {
         events.push({
           artist,
           venue: v.venue,
@@ -120,4 +119,3 @@ module.exports = {
     return events;
   }
 };
-
