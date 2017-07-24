@@ -1,18 +1,18 @@
 const dateData = require('./date-data');
-const month = dateData.month;
-let dayNum = dateData.weekStart;
 
 let postArray = [];
+let date = dateData.weekStartMoment;
 
-dateData.days.forEach((day) => {
+while (dateData.isThisWeek(date)) {
   postArray.push({
-    dayName: day,
-    dayNum,
-    month,
+    dayName: date.format('dddd'),
+    dayNum: date.date(),
+    month: date.format('MMMM'),
     holidays: [],
     events: []
   });
-  dayNum++;
-});
+
+  date.add(1, 'day');
+}
 
 module.exports = postArray;
