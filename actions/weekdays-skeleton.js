@@ -1,7 +1,8 @@
 const dateData = require('./date-data');
+const moment = require('moment');
 
 let postArray = [];
-let date = dateData.weekStartMoment;
+let date = moment(dateData.weekStartMoment);
 
 while (dateData.isThisWeek(date)) {
   postArray.push({

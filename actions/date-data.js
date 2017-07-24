@@ -1,12 +1,12 @@
 const moment = require('moment');
 const today = new Date();
 const dayNum = today.getDate();
-const weekStart = dayNum + 3;
+const weekStart = dayNum + 3; // DEPRICATED
 const weekStartMoment = moment().startOf('week');
-const weekEnd = weekStart + 6;
+const weekEnd = weekStart + 6; // DEPRICATED
 const weekEndMoment = moment().endOf('week');
-const monthNum = today.getMonth(); // this is dangerous, could lead to displaying previous month
-const days = [ "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday" ];
+const monthNum = today.getMonth(); // DEPRICATED // this is dangerous, could lead to displaying previous month
+const days = [ "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday" ]; // DEPRICATED use moment(date).format('dddd')
 const months = [
   'January',
   'February',

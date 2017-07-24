@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
 const dateData = require('./date-data');
-const { weekStart, weekEnd } = dateData;
+const moment = require('moment');
 
 /*
 Each parsers should output an array of event data objects:
@@ -23,9 +23,10 @@ module.exports = {
       const artist = $e.find('h3').text();
 
       let date = $e.find('strong').text();
-      date = new Date(date);
+      date = date.replace(/\s+/g, ' '); // cleanup whitespace
+      date = moment(date, 'MMMM DD YYYY @ hh A');
 
-      const dayName = dateData.days[date.getDay()];
+      const dayName = date.format('dddd');
       const eventTime = dateData.getTime(date);
 
       if (dateData.isThisWeek(date)) {

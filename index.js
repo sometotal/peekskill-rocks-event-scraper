@@ -27,6 +27,7 @@ function buildDays(body) {
     let text = textArray.join(' ');
     text = `Happy ${text}`;
 
+    // FIXME: using dayNum to calculate if this is in the right week is error prone and must be changed
     if (!isNaN(dayNum) &&
         dayNum >= dateData.weekStart &&
         dayNum <= dateData.weekEnd)
