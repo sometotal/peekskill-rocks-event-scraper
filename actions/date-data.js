@@ -1,3 +1,4 @@
+const moment = require('moment');
 const today = new Date();
 const dayNum = today.getDate();
 const weekStart = dayNum + 3;
@@ -21,19 +22,7 @@ const months = [
 const month = months[monthNum];
 
 const getTime = (dateObj) => {
-  console.log('THIS AM PM THING ISN"T WORKING QUITE RIGHT AROUND THE NOON HOUR');
-  let meridiem = 'AM';
-
-  let minute = dateObj.getMinutes();
-  minute = (minute > 10) ? (minute) : ('0' + minute);
-
-  let hour = dateObj.getHours();
-  if (hour > 13) {
-    hour = hour - 12;
-    meridiem = 'PM';
-  }
-
-  return `${hour}:${minute} ${meridiem}`;
+  return moment(dateObj).format('h:mm A');
 };
 
 const isThisWeek = (eventDayNum) => {
