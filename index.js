@@ -1,5 +1,5 @@
 // dependencies
-const Promise = require("bluebird");
+const Promise = require('bluebird');
 const req = require('request-promise');
 const cheerio = require('cheerio');
 const moment = require('moment');
@@ -16,7 +16,7 @@ let templateBlob;
 
 function buildDays(body, month, year) {
   let $ = cheerio.load(body);
-  let dayBlobs = $('table').eq(1).find('td').eq(3).find('p');
+  let dayBlobs = $('h2:contains(Holidays)').parent().find('p');
   let days = {};
 
   dayBlobs.each((i,e) => {
@@ -24,7 +24,7 @@ function buildDays(body, month, year) {
     const eHTML = $(e).html();
     let textArray = eText.split(' ');
     const dayNumStr = textArray.shift();
-    const date = moment(year + ' ' + month + ' ' + dayNumStr, 'YYYY MMMM DD', true);
+    const date = moment(year + ' ' + month + ' ' + dayNumStr, 'YYYY MMMM D', true);
     let text = textArray.join(' ');
     text = `Happy ${text}`;
 
@@ -38,22 +38,28 @@ function buildDays(body, month, year) {
   });
 }
 
-// TODO: this is going to break when we are bridging two months
-// will need to make two requests
-let month = dateData.weekStartMoment.format('MMMM').toLowerCase();
-let year = dateData.weekStartMoment.year();
-req({
-  url: `http://www.holidayinsights.com/moreholidays/${month}.htm`,
-  headers: { 'User-Agent': 'request' }
-})
-.then(body => buildDays(body, month, year))
-.then(() => {
+const holidayRequester = function (year, month) {
+  return req({
+    url: `http://www.holidayinsights.com/moreholidays/${month}.htm`,
+    headers: { 'User-Agent': 'request' }
+  }).then(body => buildDays(body, month, year));
+};
 
-  Promise.map(config, function(v) {
+let startMonth = dateData.weekStartMoment.format('MMMM').toLowerCase();
+let startYear = dateData.weekStartMoment.year();
+let endMonth = dateData.weekEndMoment.format('MMMM').toLowerCase();
+let endYear = dateData.weekEndMoment.year();
+
+holidayRequester(startYear, startMonth).then(() => {
+  if (startMonth !== endMonth) {
+    return holidayRequester(endYear, endMonth);
+  }
+}).then(() => {
+  return Promise.map(config, function (v) {
     const options = {
       url: v.feed || v.url,
       headers: {
-       'User-Agent': 'request'
+        'User-Agent': 'request'
       }
     };
 
@@ -68,11 +74,10 @@ req({
         });
       });
     });
-  }).then(function() {
-    templateBlob = templater(templateData);
-    console.log(templateBlob);
   });
-
+}).then(() => {
+  templateBlob = templater(templateData);
+  console.log(templateBlob);
 });
 
 // Event data

@@ -8,7 +8,7 @@ while (dateData.isThisWeek(date)) {
   postArray.push({
     dayName: date.format('dddd'),
     dayNum: date.date(),
-    date: date,
+    date: moment(date),
     month: date.format('MMMM'),
     holidays: [],
     events: []
