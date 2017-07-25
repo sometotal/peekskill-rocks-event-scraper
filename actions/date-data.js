@@ -4,10 +4,6 @@ const now = moment();
 const weekOffset = 4; // 4 days offset, our week starts on Thursday instead of Sunday
 const weekStartMoment = moment().startOf('week').add(weekOffset, 'days');
 const weekEndMoment = moment().endOf('week').add(weekOffset, 'days');
-if (weekStartMoment.isAfter(now)) {
-  weekStartMoment.subtract(7, 'days');
-  weekEndMoment.subtract(7, 'days');
-}
 
 const today = new Date(); // DEPRECATED
 const dayNum = today.getDate(); // DEPRECATED
@@ -38,8 +34,6 @@ const getTime = (dateObj) => {
 const isThisWeek = (date) => {
   return moment(date).isBetween(weekStartMoment, weekEndMoment, null, '[]');
 };
-
-console.log('WE NEED TO WORK OUT HOW TO DO THE NEXTMONTH ISSUE WHEN WE ARE BRIDGING MONTHS');
 
 module.exports = {
   today,
