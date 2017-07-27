@@ -1,9 +1,16 @@
-const today = new Date();
-const dayNum = today.getDate();
-const weekStart = dayNum + 3;
-const weekEnd = weekStart + 6;
-const monthNum = today.getMonth();
-const days = [ "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday" ];
+const moment = require('moment');
+const now = moment();
+
+const weekOffset = 4; // 4 days offset, our week starts on Thursday instead of Sunday
+const weekStartMoment = moment().startOf('week').add(weekOffset, 'days');
+const weekEndMoment = moment().endOf('week').add(weekOffset, 'days');
+
+const today = new Date(); // DEPRECATED
+const dayNum = today.getDate(); // DEPRECATED
+const weekStart = dayNum + 3; // DEPRECATED
+const weekEnd = weekStart + 6; // DEPRECATED
+const monthNum = today.getMonth(); // DEPRECATED // this is dangerous, could lead to displaying previous month
+const days = [ "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday" ]; // DEPRECATED use moment(date).format('dddd')
 const months = [
   'January',
   'February',
@@ -21,36 +28,24 @@ const months = [
 const month = months[monthNum];
 
 const getTime = (dateObj) => {
-  console.log('THIS AM PM THING ISN"T WORKING QUITE RIGHT AROUND THE NOON HOUR');
-  let meridiem = 'AM';
-
-  let minute = dateObj.getMinutes();
-  minute = (minute > 10) ? (minute) : ('0' + minute);
-
-  let hour = dateObj.getHours();
-  if (hour > 13) {
-    hour = hour - 12;
-    meridiem = 'PM';
-  }
-
-  return `${hour}:${minute} ${meridiem}`;
+  return moment(dateObj).format('h:mm A');
 };
 
-const isThisWeek = (eventDayNum) => {
-  return (eventDayNum >= weekStart && eventDayNum <= weekEnd);
-}
-
-console.log('WE NEED TO WORK OUT HOW TO DO THE NEXTMONTH ISSUE WHEN WE ARE BRIDGING MONTHS');
+const isThisWeek = (date) => {
+  return moment(date).isBetween(weekStartMoment, weekEndMoment, null, '[]');
+};
 
 module.exports = {
   today,
   dayNum,
   weekStart,
+  weekStartMoment,
   weekEnd,
+  weekEndMoment,
   month,
   monthNum,
   days,
   months,
   getTime,
-  isThisWeek,
+  isThisWeek
 };
