@@ -26,10 +26,10 @@ module.exports = {
       date = date.replace(/\s+/g, ' '); // cleanup whitespace
       date = moment(date, 'MMMM DD YYYY @ hh A');
 
-      const dayName = date.format('dddd');
-      const eventTime = dateData.getTime(date);
+      if (date.isValid() && dateData.isThisWeek(date)) {
+        const dayName = date.format('dddd');
+        const eventTime = dateData.getTime(date);
 
-      if (dateData.isThisWeek(date)) {
         events.push({
           artist,
           venue: v.venue,
@@ -47,13 +47,22 @@ module.exports = {
     let events = [];
 
     $('.sqs-block-content p').each((i,e) => {
-      const listing = $(e).text();
-      const arr = listing.split(' - ');
+      const str = $(e).text();
+      var [ date, artist ]= str.split('-');
 
-      if (arr.length > 1) {
-        const date = arr[0].trim();
-        const artist = arr[1].trim();
-        events.push({date, artist});
+      date = moment(date, 'dddd M/DD @ hha');
+
+      if (date.isValid() && dateData.isThisWeek(date)) {
+        const dayName = date.format('dddd');
+        const eventTime = dateData.getTime(date);
+
+        events.push({
+          artist,
+          venue: v.venue,
+          url: v.url,
+          day: dayName,
+          time: eventTime
+        });
       }
     });
 
@@ -62,18 +71,31 @@ module.exports = {
   hvmusic: (body, v) => {
     let $ = cheerio.load(eval(body.slice(15, -2)));
     let events = [];
-    let count = 0;
 
     $('.hvmusic_calendar tr').each((i,e) => {
       const $e = $(e);
       if ($e.hasClass('hvmusic_row1') || $e.hasClass('hvmusic_row2')) {
         const td = $e.find('td[rowspan=2]');
-        const weekday = $(td).find('small').eq(0).text();
+
         const caldate = $(td).find('nobr').text();
         const [timestart, timeend] = $(td).find('small').eq(1).text().split('to');
-        const date = `${weekday} ${caldate} ${timestart} to ${timeend}`
-        const artist = $e.find('.hvmusic_band_name').text();
-        events.push({date, artist});
+        let date = moment(`${caldate} ${timestart}`, 'MMMM D hh a');
+
+        if (date.isValid() && dateData.isThisWeek(date)) {
+          const dayName = date.format('dddd');
+          const eventTime = dateData.getTime(date);
+
+          let artist = $e.find('.hvmusic_band_name').text();
+          artist = artist !== '' ? artist : $e.find('.hvmusic_headline').text();
+
+          events.push({
+            artist,
+            venue: v.venue,
+            url: v.url,
+            day: dayName,
+            time: eventTime
+          });
+        }
       }
     });
 
@@ -82,25 +104,24 @@ module.exports = {
   tpch: (body, v) => {
     let $ = cheerio.load(body);
     let events = [];
+    const month = moment().format('MMMM');
 
-    $('#blog li').first().find('p').each((i,e) => {
-      let date;
-      let artist;
+    $(`h1:contains(${month})`).parent('header').parent('article').find('p').each((i,e) => {
       const listing = $(e).text();
-      const listingArr = listing.split('~');
+      const [ day, artist ]= listing.split('~');
+      let date = moment(`${month} ${day}`, 'MMMM ddd Do');
 
-      if (listingArr.length > 1) {
-        date = listingArr[0].trim();
-        date += ' 7pm (Sunday 1pm)';
-        artist = listingArr[1].trim();
-        events.push({ date, artist });
-      }
-      else if (listingArr.length === 1) {
-        const tmpVar = listingArr[0].trim();
-        if (tmpVar != '') {
-          date = artist = tmpVar;
-          events.push({ date, artist });
-        }
+      if (date.isValid() && dateData.isThisWeek(date)) {
+        const dayName = date.format('dddd');
+        const eventTime = dayName === 'Sunday' ? '1:00 PM' : '7:00 PM'
+
+        events.push({
+          artist: artist.trim(),
+          venue: v.venue,
+          url: v.url,
+          day: dayName,
+          time: eventTime
+        });
       }
     });
 
@@ -112,9 +133,21 @@ module.exports = {
 
     $('td.tribe-events-has-events .hentry').each((i,e) => {
       const tribeJSON = $(e).data('tribejson');
-      const date = tribeJSON.startTime;
-      const artist = tribeJSON.title;
-      events.push({ date, artist });
+      const date = moment(tribeJSON.startTime, 'MMM D @ h:ss a'); //Jul 28 @ 10:00 pm
+
+      if (date.isValid() && dateData.isThisWeek(date)) {
+        const artist = tribeJSON.title;
+        const dayName = date.format('dddd');
+        const eventTime = dateData.getTime(date);
+
+        events.push({
+          artist,
+          venue: v.venue,
+          url: v.url,
+          day: dayName,
+          time: eventTime
+        });
+      }
     });
 
     return events;
