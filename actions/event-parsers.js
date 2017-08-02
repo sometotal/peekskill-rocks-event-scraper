@@ -2,6 +2,10 @@ const cheerio = require('cheerio');
 const dateData = require('./date-data');
 const moment = require('moment');
 
+function toTitleCase(str) {
+  return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
 /*
 Each parsers should output an array of event data objects:
 {
@@ -20,7 +24,6 @@ module.exports = {
 
     $('li.event-item figcaption').each((i,e) => {
       const $e = $(e);
-      const artist = $e.find('h3').text();
 
       let date = $e.find('strong').text();
       date = date.replace(/\s+/g, ' '); // cleanup whitespace
@@ -29,6 +32,8 @@ module.exports = {
       if (date.isValid() && dateData.isThisWeek(date)) {
         const dayName = date.format('dddd');
         const eventTime = dateData.getTime(date);
+        let artist = $e.find('h3').text();
+        artist = toTitleCase(artist.trim());
 
         events.push({
           artist,
@@ -48,13 +53,14 @@ module.exports = {
 
     $('.sqs-block-content p').each((i,e) => {
       const str = $(e).text();
-      var [ date, artist ]= str.split('-');
+      let [ date, artist ]= str.split('-');
 
       date = moment(date, 'dddd M/DD @ hha');
 
       if (date.isValid() && dateData.isThisWeek(date)) {
         const dayName = date.format('dddd');
         const eventTime = dateData.getTime(date);
+        artist = toTitleCase(artist.trim());
 
         events.push({
           artist,
@@ -87,6 +93,7 @@ module.exports = {
 
           let artist = $e.find('.hvmusic_band_name').text();
           artist = artist !== '' ? artist : $e.find('.hvmusic_headline').text();
+          artist = toTitleCase(artist.trim());
 
           events.push({
             artist,
@@ -104,26 +111,39 @@ module.exports = {
   tpch: (body, v) => {
     let $ = cheerio.load(body);
     let events = [];
-    const month = moment().format('MMMM');
+    let startMonth = month = dateData.weekStartMoment.format('MMMM');
+    const endMonth = dateData.weekEndMoment.format('MMMM');
 
-    $(`h1:contains(${month})`).parent('header').parent('article').find('p').each((i,e) => {
+    function parser(e) {
       const listing = $(e).text();
-      const [ day, artist ]= listing.split('~');
+      let [ day, artist ]= listing.split('~');
       let date = moment(`${month} ${day}`, 'MMMM ddd Do');
 
-      if (date.isValid() && dateData.isThisWeek(date)) {
+      if (date.isValid() && dateData.isThisWeek(date) && artist !== undefined) {
         const dayName = date.format('dddd');
-        const eventTime = dayName === 'Sunday' ? '1:00 PM' : '7:00 PM'
+        const eventTimeValue = dayName === 'Sunday' ? 13 : 19;
+        date = date.add(eventTimeValue, 'h');
+        const eventTime = dateData.getTime(date);
+
+        artist = toTitleCase(artist.trim());
 
         events.push({
-          artist: artist.trim(),
+          artist: artist,
           venue: v.venue,
           url: v.url,
           day: dayName,
           time: eventTime
         });
       }
-    });
+    }
+
+    $(`h1:contains(${startMonth})`).parent('header').parent('article').find('p').each((i,e) => parser(e));
+
+    // if we are overlapping month end/start in this week
+    if (startMonth !== endMonth) {
+      month = endMonth;
+      $(`h1:contains(${endMonth})`).parent('header').parent('article').find('p').each((i,e) => parser(e));
+    }
 
     return events;
   },
@@ -136,9 +156,10 @@ module.exports = {
       const date = moment(tribeJSON.startTime, 'MMM D @ h:ss a'); //Jul 28 @ 10:00 pm
 
       if (date.isValid() && dateData.isThisWeek(date)) {
-        const artist = tribeJSON.title;
+        let artist = tribeJSON.title;
         const dayName = date.format('dddd');
         const eventTime = dateData.getTime(date);
+        artist = toTitleCase(artist.trim());
 
         events.push({
           artist,
@@ -153,3 +174,4 @@ module.exports = {
     return events;
   }
 };
+
