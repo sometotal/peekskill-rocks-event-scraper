@@ -1,3 +1,5 @@
+'use strict';
+
 const dateData = require('./date-data');
 const moment = require('moment');
 
@@ -11,7 +13,7 @@ while (dateData.isThisWeek(date)) {
     date: moment(date),
     month: date.format('MMMM'),
     holidays: [],
-    events: []
+    events: [],
   });
 
   date.add(1, 'day');

@@ -1,47 +1,47 @@
+'use strict';
+
 module.exports = {
   config: [
     {
       parser: 'paramount',
       venue: 'Paramount Hudson Valley',
-      url: 'http://paramounthudsonvalley.com/events/'
+      url: 'http://paramounthudsonvalley.com/events/',
     },
     {
       parser: 'birdsall',
       venue: 'Birdsall House',
-      url: 'http://birdsallhouse.net/music/'
+      url: 'http://birdsallhouse.net/music/',
     },
     {
       parser: 'hvmusic',
       venue: '12 Grapes',
       feed: 'http://hvmusic.com/listing/calentry_list_user.php?calendar_id=208',
-      url: 'http://www.12grapes.com/events.html'
+      url: 'http://www.12grapes.com/events.html',
     },
     {
       parser: 'hvmusic',
       venue: 'Beanrunner',
       feed: 'http://hvmusic.com/listing/calentry_list_user.php?calendar_id=256',
-      url: 'http://beanrunnercafe.com/beanrunnermusic.html'
+      url: 'http://beanrunnercafe.com/beanrunnermusic.html',
     },
     {
       parser: 'tpch',
       venue: 'Peekskill Coffee House',
-      url: 'http://peekskillcoffee.com/events'
+      url: 'http://peekskillcoffee.com/events',
     },
     {
       parser: 'hudson',
       venue: 'Hudson Room',
-      url: 'https://www.hudsonroom.com/calendar/'
+      url: 'https://www.hudsonroom.com/calendar/',
     },
-
-
-
-    // { parser: 'dylans', venue: 'Dylans Wine Cellar Events', url: '' },
-  ]
+  ],
 };
 
 // ************************************
 // TODO Implement the following sources
 // ************************************
+//
+// { parser: 'dylans', venue: 'Dylans Wine Cellar Events', url: '' },
 //
 // FACEBOOK -----------------------
 // Division Street Guitars, and their Facebook page

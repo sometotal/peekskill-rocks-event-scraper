@@ -1,3 +1,5 @@
+'use strict';
+
 const moment = require('moment');
 const now = moment();
 
@@ -10,7 +12,10 @@ const dayNum = today.getDate(); // DEPRECATED
 const weekStart = dayNum + 3; // DEPRECATED
 const weekEnd = weekStart + 6; // DEPRECATED
 const monthNum = today.getMonth(); // DEPRECATED // this is dangerous, could lead to displaying previous month
-const days = [ "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday" ]; // DEPRECATED use moment(date).format('dddd')
+// DEPRECATED use moment(date).format('dddd')
+const days = [
+  'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday',
+];
 const months = [
   'January',
   'February',
@@ -23,7 +28,7 @@ const months = [
   'September',
   'October',
   'Novemeber',
-  'December'
+  'December',
 ];
 const month = months[monthNum];
 
@@ -47,5 +52,5 @@ module.exports = {
   days,
   months,
   getTime,
-  isThisWeek
+  isThisWeek,
 };
