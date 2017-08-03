@@ -58,7 +58,6 @@ module.exports = {
     $('.sqs-block-content p').each((i, e) => {
       const str = $(e).text();
       let [date, artist] = str.split('-');
-
       date = moment(date, 'dddd M/DD @ hha');
 
       if (date.isValid() && dateData.isThisWeek(date)) {
