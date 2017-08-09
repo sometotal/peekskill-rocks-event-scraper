@@ -78,33 +78,6 @@ Sundays - 10:00 am to 9:00 pm
 Future events will be added to <a href="http://peekskill.rocks/calendar/" target="_blank" rel="noopener noreferrer">our peekskill.rocks calendar</a>.
 `;
 
-function tmplHeader(day) {
-  tmpl += `
-<h4>${day.dayName}, ${day.month} ${day.dayNum}`;
-}
-
-function tmplHolidays({holidays}) {
-  holidays.forEach((h) => {
-    tmpl += `
-<br>${h}`;
-  });
-}
-
-function tmplHeaderClose() {
-  tmpl += `
-</h4>
-  `;
-}
-
-function tmplEvents({events}) {
-  events.forEach((e) => {
-    tmpl += `
-• <strong>${e.artist}</strong>
-@ <a href="${e.url}" target="_blank">${e.venue}</a> - ${e.time}
-    `;
-  });
-}
-
 function testForKaraoke({dayName, events}) {
   if (dayName !== 'Thursday') return false;
 
@@ -121,12 +94,34 @@ function testForKaraoke({dayName, events}) {
   }
 }
 
+function tmplDays(day) {
+  tmpl += `
+<h4>${day.dayName}, ${day.month} ${day.dayNum}`;
+
+  day.holidays.forEach((h) => {
+    tmpl += `
+<br>${h}`;
+  });
+
+  tmpl += `
+</h4>
+  `;
+}
+
+function tmplEvents(day) {
+  testForKaraoke(day);
+
+  day.events.forEach((e) => {
+    tmpl += `
+• <strong>${e.artist}</strong>
+@ <a href="${e.url}" target="_blank">${e.venue}</a> - ${e.time}
+    `;
+  });
+}
+
 module.exports = (data) => {
   data.forEach((day) => {
-    tmplHeader(day);
-    tmplHolidays(day);
-    tmplHeaderClose();
-    testForKaraoke(day);
+    tmplDays(day);
     tmplEvents(day);
   });
 
