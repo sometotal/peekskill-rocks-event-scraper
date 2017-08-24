@@ -95,9 +95,20 @@ module.exports = {
           const dayName = date.format('dddd');
           const eventTime = dateData.getTime(date);
 
-          let artist = $e.find('.hvmusic_band_name').text();
-          artist = artist !== '' ? artist : $e.find('.hvmusic_headline').text();
-          artist = toTitleCase(artist.trim());
+          let artist = '';
+          let artistEl = $e.find('.hvmusic_band_name');
+          artistEl = artistEl.text() !== '' ? artistEl : $e.find('.hvmusic_headline');
+
+          if (artistEl.length <= 1) {
+            artist = toTitleCase(artistEl.text().trim());
+          }
+          else {
+            artistEl.each((i, a) => {
+              artist = `${artist} ${$(a).text()}`;
+            });
+
+            artist = toTitleCase(artist.trim());
+          }
 
           events.push({
             artist,
