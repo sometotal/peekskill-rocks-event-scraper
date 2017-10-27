@@ -1,5 +1,9 @@
 'use strict';
 
+console.log('=================================')
+console.log(' ----- BEGIN KENNY LOGGINS -----');
+console.log('~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~')
+
 // dependencies
 const Promise = require('bluebird');
 const req = require('request-promise');
@@ -16,7 +20,7 @@ const templater = require('./actions/templater');
 const templateData = require('./actions/weekdays-skeleton');
 let templateBlob;
 
-function buildDays(body, month, year) {
+const buildDays = (body, month, year) => {
   let $ = cheerio.load(body);
   let dayBlobs = $('h2:contains(Holidays)').parent().find('p');
   let days = {};
@@ -41,7 +45,7 @@ function buildDays(body, month, year) {
   });
 }
 
-const holidayRequester = function(year, month) {
+const holidayRequester = (year, month) => {
   return req({
     url: `http://www.holidayinsights.com/moreholidays/${month}.htm`,
     headers: {'User-Agent': 'request'},
@@ -69,6 +73,20 @@ holidayRequester(startYear, startMonth).then(() => {
     return req(options)
       .then((body) => {
         const events = parsers[v.parser](body, v);
+
+        events.forEach((event, i) => {
+          templateData.forEach((day, j) => {
+            if (event.day === day.dayName) {
+              templateData[j].events.push(events[i]);
+            }
+          });
+        });
+      })
+      .catch((err)=> {
+        console.log(v.venue, 'FAILED !!!!!!!!!');
+        const body = err.response.body;
+        const events = parsers[v.parser](body, v);
+
         events.forEach((event, i) => {
           templateData.forEach((day, j) => {
             if (event.day === day.dayName) {
@@ -80,6 +98,10 @@ holidayRequester(startYear, startMonth).then(() => {
   });
 }).then(() => {
   templateBlob = templater(templateData);
+  console.log('~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~')
+  console.log(' ----- END KENNY LOGGINS -----');
+  console.log('=================================')
+
   console.log(templateBlob);
 });
 

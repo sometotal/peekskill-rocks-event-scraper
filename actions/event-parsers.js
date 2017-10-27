@@ -131,7 +131,8 @@ module.exports = {
 
     function parser(e, month) {
       const listing = $(e).text();
-      let [day, artist] = listing.split('~');
+      let [dddDo, artist] = listing.split('~');
+      const day = dddDo.split('.').join(' ');
       let date = moment(`${month} ${day}`, 'MMMM ddd Do');
 
       if (date.isValid() && dateData.isThisWeek(date) && artist !== undefined) {
