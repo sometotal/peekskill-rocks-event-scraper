@@ -32,7 +32,7 @@ module.exports = {
     {
       parser: 'hudson',
       venue: 'Hudson Room',
-      url: 'https://www.hudsonroom.com/calendar/',
+      url: 'https://www.hudsonroom.com/calendar',
     },
   ],
 };
