@@ -11,13 +11,13 @@ const cheerio = require('cheerio');
 const moment = require('moment');
 
 // config and utils
-const {config} = require('./actions/venue-config');
-const parsers = require('./actions/event-parsers');
-const dateData = require('./actions/date-data');
+const {config} = require('./modules/venue-config');
+const parsers = require('./modules/event-parsers');
+const dateData = require('./modules/date-data');
 
 // templating
-const templater = require('./actions/templater');
-const templateData = require('./actions/weekdays-skeleton');
+const templater = require('./modules/templater');
+const templateData = require('./modules/weekdays-skeleton');
 let templateBlob;
 
 const buildDays = (body, month, year) => {
