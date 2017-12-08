@@ -126,12 +126,12 @@ module.exports = {
   tpch: (body, v) => {
     let $ = cheerio.load(body);
     let events = [];
-    let startMonth = dateData.weekStartMoment.format('MMMM');
-    const endMonth = dateData.weekEndMoment.format('MMMM');
+    let startMonth = dateData.weekStartMoment.format('MMMM').toUpperCase();
+    let endMonth = dateData.weekEndMoment.format('MMMM').toUpperCase();
 
     function parser(e, month) {
       const listing = $(e).text();
-      let [dddDo, artist] = listing.split('~');
+      let [dddDo, artist] = listing.split('–');
       const day = dddDo.split('.').join(' ');
       let date = moment(`${month} ${day}`, 'MMMM ddd Do');
 
