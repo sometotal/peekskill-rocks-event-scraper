@@ -42,7 +42,7 @@ let tmpl = ``;
 const macheteKaraoke = `
 • <strong>Karaoke Night</strong>
 with Tina Machete
-@ <a href=“http://gleasonspeekskill.com/” target=“_blank” rel=“noopener noreferrer”>Gleason’s</a> - 9:00 pm
+@ <a href="http://gleasonspeekskill.com/" target="_blank" rel="noopener noreferrer">Gleason's</a> - 9:00 pm
 `;
 
 const footer = `
@@ -55,8 +55,8 @@ const footer = `
 On Water Street, a block from the train station, next to the Peekskill Brewery.
 @ <a href="https://www.facebook.com/PedalPeekskill/" target="_blank" rel="noopener noreferrer">Pedal Peekskill</a>
 
-• <strong><a href="http://peekskillfarmersmarket.com/" target="_blank" rel="noopener noreferrer">The Peekskill Farmer's Market</a></strong>
-Outdoors on Bank Street, 8 am - 2 pm, every Saturday.
+• <strong><a href="http://peekskillfarmersmarket.com/" target="_blank" rel="noopener">The Peekskill Indoor Winter Farmer's Market</a></strong>
+InDoors @ <a href="https://www.google.com/maps/place/925+South+St,+Peekskill,+NY+10566/@41.2897892,-73.9228055,17z/data=!3m1!4b1!4m5!3m4!1s0x89c2c8dbaf352005:0x2bf488bfcb8e7030!8m2!3d41.2897892!4d-73.9206168">925 South Street</a>, 9 am - 1 pm, every Saturday thru May 26th.
 
 • <strong>Hudson River Cruises</strong>
 From the Dock at Peekskill Riverfront Green
