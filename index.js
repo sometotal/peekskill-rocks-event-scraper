@@ -1,7 +1,7 @@
 'use strict';
 
 console.log('=================================')
-console.log(' ----- BEGIN KENNY LOGGINS AGAIN! -----');
+console.log(' ----- Its Log!! Its Log!!! -----');
 console.log('~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~')
 
 // dependencies
