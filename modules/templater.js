@@ -55,8 +55,8 @@ const footer = `
 On Water Street, a block from the train station, next to the Peekskill Brewery.
 @ <a href="https://www.facebook.com/PedalPeekskill/" target="_blank" rel="noopener noreferrer">Pedal Peekskill</a>
 
-• <strong><a href="http://peekskillfarmersmarket.com/" target="_blank" rel="noopener">The Peekskill Indoor Winter Farmer's Market</a></strong>
-InDoors @ <a href="https://www.google.com/maps/place/925+South+St,+Peekskill,+NY+10566/@41.2897892,-73.9228055,17z/data=!3m1!4b1!4m5!3m4!1s0x89c2c8dbaf352005:0x2bf488bfcb8e7030!8m2!3d41.2897892!4d-73.9206168">925 South Street</a>, 9 am - 1 pm, every Saturday thru May 26th.
+• <strong><a href="http://peekskillfarmersmarket.com/" target="_blank" rel="noopener">The Peekskill Farmer's Market</a></strong>
+OUTDoors @ <a href="https://www.google.com/maps/place/1+Bank+St,+Peekskill,+NY+10566">1 Bank Street</a>, 8 am - 2 pm, every Saturday thru Nov 17th.
 
 • <strong>Hudson River Cruises</strong>
 From the Dock at Peekskill Riverfront Green
