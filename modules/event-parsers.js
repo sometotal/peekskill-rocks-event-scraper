@@ -190,5 +190,37 @@ module.exports = {
 
     return events;
   },
+  fieldlib: (body, v) => {
+    let $ = cheerio.load(body);
+    let events = [];
+
+    let $tds = $('td.future');
+    console.log($tds);
+    let $tdToday = $('td.today');
+    console.log($tdToday);
+
+    // $('td.future').each((i, e) => {
+    //   const $data = $(e).data();
+    //   const date = moment($data.data-date, 'YYYY-MM-DD');
+
+    //   if (date.isValid() && dateData.isThisWeek(date)) {
+    //     let artist = tribeJSON.title;
+    //     const dayName = date.format('dddd');
+    //     const eventTime = dateData.getTime(date);
+    //     artist = toTitleCase(artist.trim());
+
+    //     events.push({
+    //       artist,
+    //       venue: v.venue,
+    //       url: v.url,
+    //       day: dayName,
+    //       time: eventTime,
+    //     });
+    //   }
+    // });
+
+    return events;
+  },
+
 };
 
