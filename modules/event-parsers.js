@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs');
 const cheerio = require('cheerio');
 const dateData = require('./date-data');
 const moment = require('moment');
@@ -193,34 +194,76 @@ module.exports = {
   fieldlib: (body, v) => {
     let $ = cheerio.load(body);
     let events = [];
+    const $tdsFuture = $('td.future');
+    const $tdsToday = $('td.today');
 
-    let $tds = $('td.future');
-    console.log($tds);
-    let $tdToday = $('td.today');
-    console.log($tdToday);
+    function processObjs(objs) {
+      Object.keys(objs).forEach(key => {
+        const keyNum = parseInt(key, 10);
+        if (keyNum >= 0) {
+          const obj = objs[keyNum];
+          const items = $(obj).find($('.item'));
+          items.each((index, item) => {
+            const $item = $(item);
+            const dateText = $item.find($('.views-field-field-cal-event')).text().trim();
+            const date = moment(dateText, 'MM/DD/YYYY - h:ssa' );
+            if (date.isValid() && dateData.isThisWeek(date)) {
+              const artist = $item.find($('.views-field-title')).text().trim();
+              const day = date.format('dddd');
+              const time = dateData.getTime(date);
 
-    // $('td.future').each((i, e) => {
-    //   const $data = $(e).data();
-    //   const date = moment($data.data-date, 'YYYY-MM-DD');
+              events.push({
+                artist,
+                day,
+                time,
+                venue: v.venue,
+                url: v.url,
+              });
+            }
+          });
+        }
+      });
+    }
 
-    //   if (date.isValid() && dateData.isThisWeek(date)) {
-    //     let artist = tribeJSON.title;
-    //     const dayName = date.format('dddd');
-    //     const eventTime = dateData.getTime(date);
-    //     artist = toTitleCase(artist.trim());
-
-    //     events.push({
-    //       artist,
-    //       venue: v.venue,
-    //       url: v.url,
-    //       day: dayName,
-    //       time: eventTime,
-    //     });
-    //   }
-    // });
+    processObjs($tdsToday);
+    processObjs($tdsFuture);
 
     return events;
   },
+  twelve: (body, v) => {
+    try {
+      let localFile = fs.readFileSync(v.static);
+      let $ = cheerio.load(localFile);
+      let events = [];
+      const cards = $('.evCard');
 
+      Object.keys(cards).forEach(key => {
+        const keyNum = parseInt(key, 10);
+        if (keyNum >= 0) {
+          const card = cards[keyNum];
+          const $card= $(card);
+          const dateText = $card.find($('div[data-hook="date"]')).text().trim();
+          const date = moment(dateText, 'MMM DD, h:ss A' );
+
+          if (date.isValid() && dateData.isThisWeek(date)) {
+            const artist = $card.find($('div[data-hook="title"]')).text().trim();
+            const day = date.format('dddd');
+            const time = dateData.getTime(date);
+
+            events.push({
+              artist,
+              day,
+              time,
+              venue: v.venue,
+              url: v.url,
+            });
+          }
+        }
+      });
+      return events;
+    } catch (error) {
+      console.log('No local file for 12 Peekskill Lounge');
+      return events;
+    }
+  },
 };
-

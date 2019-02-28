@@ -45,6 +45,33 @@ with Tina Machete
 @ <a href="http://gleasonspeekskill.com/" target="_blank" rel="noopener noreferrer">Gleason's</a> - 9:00 pm
 `;
 
+const summerMarket = `
+<!-- SUMMER FARMERS MARKET -->
+• <strong><a href="http://peekskillfarmersmarket.com/" target="_blank" rel="noopener">The Peekskill Farmer's Market</a></strong>
+OUTDoors @ <a href="https://www.google.com/maps/place/1+Bank+St,+Peekskill,+NY+10566">1 Bank Street</a>, 8 am - 2 pm, every Saturday thru Nov 17th.
+`;
+
+const winterMarket = `
+<!-- WINTER FARMERS MARKET -->
+• <strong><a href="http://peekskillfarmersmarket.com/" target="_blank" rel="noopener">The Peekskill Winter Farmer's Market</a></strong>
+OUTDoors @ <a href="https://www.google.com/maps/place/925+South+St,+Peekskill,+NY+10566">925 South Street</a>, 10 am - 2 pm, every Saturday Jan 19 - Apr 27.
+`;
+
+const determineMarketSeason = () => {
+  const date  = new Date();
+  const tmpMonth = date.getMonth();
+  const month = tmpMonth + 1;
+
+  // if month is after April it's summer market
+  if (month > 4)
+    return summerMarket
+  else {
+    return winterMarket;
+  }
+};
+
+const farmersMarket = determineMarketSeason();
+
 const footer = `
 
 <hr />
@@ -55,8 +82,7 @@ const footer = `
 On Water Street, a block from the train station, next to the Peekskill Brewery.
 @ <a href="https://www.facebook.com/PedalPeekskill/" target="_blank" rel="noopener noreferrer">Pedal Peekskill</a>
 
-• <strong><a href="http://peekskillfarmersmarket.com/" target="_blank" rel="noopener">The Peekskill Farmer's Market</a></strong>
-OUTDoors @ <a href="https://www.google.com/maps/place/1+Bank+St,+Peekskill,+NY+10566">1 Bank Street</a>, 8 am - 2 pm, every Saturday thru Nov 17th.
+${farmersMarket}
 
 • <strong>Hudson River Cruises</strong>
 From the Dock at Peekskill Riverfront Green

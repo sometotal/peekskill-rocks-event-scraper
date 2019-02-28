@@ -84,17 +84,20 @@ holidayRequester(startYear, startMonth).then(() => {
       })
       .catch((err)=> {
         console.log(v.venue, 'FAILED !!!!!!!!!');
-        const body = err.response.body;
-        const events = parsers[v.parser](body, v);
+        console.log(err);
+        if (v.parser === 'hudson') {
+          const body = err.response.body;
+          const events = parsers[v.parser](body, v);
 
-        events.forEach((event, i) => {
-          templateData.forEach((day, j) => {
-            if (event.day === day.dayName) {
-              templateData[j].events.push(events[i]);
-            }
+          events.forEach((event, i) => {
+            templateData.forEach((day, j) => {
+              if (event.day === day.dayName) {
+                templateData[j].events.push(events[i]);
+              }
+            });
           });
-        });
-      });
+        }
+     });
   });
 }).then(() => {
   templateBlob = templater(templateData);
