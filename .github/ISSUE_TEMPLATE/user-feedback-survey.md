@@ -7,22 +7,23 @@ assignees: ''
 
 ---
 
-*Survey title*
+**Survey title**
+_${topic} survey (ex. Migration challenges survey)_
 
-*Survey owners*
+**Survey owner(s)**
+_Who will be responsible for details and ensuring questions are adequately formed_
 
-*Survey timeframe (including any relevant context)*
+**Survey timeframe**
+_Ideally, how soon should this be completed (typically x months) and please provide any relevant context_
 
-*Survey goals summary*
+**Survey goals summary**
+_What would you like to achieve in gathering these survey responses (ex. finding pain points in migration path to better serve community in future updates)_
 
-*Survey results expectations*
-(what efforts might this survey drive, for example, further development on “x”)
+**Survey questions**
+_This may be best captured in a google doc or Pull request_
 
-*Survey questions*
-(more guidance on this to follow)
+**Survey development google doc link**
+_(if applicable)_
 
-*Survey development google doc link*
-(if applicable)
-
-*Survey pull request*
-(adding directory and necessary documents)
+**Survey pull request**
+_(adding directory and necessary documents)_
